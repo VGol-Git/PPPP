@@ -4,15 +4,13 @@
 
 int startSizeColumnMatrix[2], startSizeRowMatrix[2], n2 = 1, m2 = 1, keyFilling, reducedMatrixSize = 2;
 
-void CoutMatrix(int** Matrix, int indMatrix, int columnSize, int rowsSize) {
-	std::cout << "\nМатрица " << indMatrix << " \n\n";
+void CoutMatrix(int** Matrix, int columnSize, int rowsSize) {
 	for (int i = 0; i < columnSize; i++)
 	{
 		for (int column = 0; column < rowsSize; column++)
 			std::cout << Matrix[i][column] << " ";
 		std::cout << std::endl;
 	}
-
 }
 void InitializationMatrix(int** Matrix, int indMatrix, int approachKey, int columnSize, int rowsSize) {
 	for (int i = 0; i < columnSize; i++)
@@ -62,34 +60,34 @@ void AddMatrixsToMatrix(int***& MainMatrix, int sizeMatrix, int sizeRows, int si
 }
 
 void CalculatingMediateMatrix1(int**& mediateMatrix, int** &SplitMatrix1, int** &SplitMatrix2, int** &SplitMatrix3, int** &SplitMatrix4) {
-	for (int i = 0; i < reducedMatrixSize / 2; i++) {
+	for (int row = 0; row < reducedMatrixSize / 2; row++) {
 		for (int column = 0; column < reducedMatrixSize / 2; column++) {
-			mediateMatrix[i][column] = 0;
+			mediateMatrix[row][column] = 0;
 			for (int z = 0; z < reducedMatrixSize / 2; z++) {
-				mediateMatrix[i][column] += (SplitMatrix1[i][z] + SplitMatrix2[i][z]) * (SplitMatrix3[z][column] + SplitMatrix4[z][column]);
+				mediateMatrix[row][column] += (SplitMatrix1[row][z] + SplitMatrix2[row][z]) * (SplitMatrix3[z][column] + SplitMatrix4[z][column]);
 			}
 		}
 	}
 }
 void CalculatingMediateMatrix2(int**& mediateMatrix, int** &SplitMatrix1, int** &SplitMatrix2, int** &SplitMatrix3) {
-	for (int i = 0; i < reducedMatrixSize / 2; i++)
+	for (int row = 0; row < reducedMatrixSize / 2; row++)
 	{
 		for (int column = 0; column < reducedMatrixSize / 2; column++)
 		{
-			mediateMatrix[i][column] = 0;
+			mediateMatrix[row][column] = 0;
 			for (int z = 0; z < reducedMatrixSize / 2; z++)
 			{
-				mediateMatrix[i][column] += (SplitMatrix1[i][z] + SplitMatrix2[i][z]) * SplitMatrix3[z][column];
+				mediateMatrix[row][column] += (SplitMatrix1[row][z] + SplitMatrix2[row][z]) * SplitMatrix3[z][column];
 			}
 		}
 	}
 }
 void CalculatingMediateMatrix3(int**& mediateMatrix, int** &SplitMatrix1, int** &SplitMatrix2, int** &SplitMatrix3) {
-	for (int i = 0; i < reducedMatrixSize / 2; i++) {
+	for (int row = 0; row < reducedMatrixSize / 2; row++) {
 		for (int column = 0; column < reducedMatrixSize / 2; column++) {
-			mediateMatrix[i][column] = 0;
+			mediateMatrix[row][column] = 0;
 			for (int z = 0; z < reducedMatrixSize / 2; z++) {
-				mediateMatrix[i][column] += SplitMatrix1[i][z] * (SplitMatrix2[z][column] - SplitMatrix3[z][column]);
+				mediateMatrix[row][column] += SplitMatrix1[row][z] * (SplitMatrix2[z][column] - SplitMatrix3[z][column]);
 			}
 
 		}
@@ -97,11 +95,11 @@ void CalculatingMediateMatrix3(int**& mediateMatrix, int** &SplitMatrix1, int** 
 
 }
 void CalculatingMediateMatrix4(int**& mediateMatrix, int** &SplitMatrix1, int** &SplitMatrix2, int** &SplitMatrix3, int** &SplitMatrix4) {
-	for (int i = 0; i < reducedMatrixSize / 2; i++) {
+	for (int row = 0; row < reducedMatrixSize / 2; row++) {
 		for (int column = 0; column < reducedMatrixSize / 2; column++) {
-			mediateMatrix[i][column] = 0;
+			mediateMatrix[row][column] = 0;
 			for (int z = 0; z < reducedMatrixSize / 2; z++) {
-				mediateMatrix[i][column] += (SplitMatrix1[i][z] - SplitMatrix2[i][z]) * (SplitMatrix3[z][column] + SplitMatrix4[z][column]);
+				mediateMatrix[row][column] += (SplitMatrix1[row][z] - SplitMatrix2[row][z]) * (SplitMatrix3[z][column] + SplitMatrix4[z][column]);
 			}
 		}
 	}
@@ -120,7 +118,7 @@ void CalculatingAuxiliaryMatrix4(int**& AuxiliaryMatrix, int***& MediateMatrices
 	AuxiliaryMatrix[row][column] = MediateMatrices[0][row][column] + MediateMatrices[2][row][column] - MediateMatrices[1][row][column] + MediateMatrices[5][row][column];
 }
 
-void alignmentMatrix(int **& Matrix, int& alignment, bool key) {
+void AlignmentMatrix(int **& Matrix, int& alignment, bool key) {
 	for (int row = 0; row < reducedMatrixSize; row++) {
 		int valuesZero = 0;
 		for (int column = 0; column < reducedMatrixSize; column++) {
@@ -169,8 +167,10 @@ int main()
 		AddRowsToMatrix(StartMatrixs[i], startSizeColumnMatrix[i], startSizeRowMatrix[i]);
 		InitializationMatrix(StartMatrixs[i], i + 1, keyFilling, startSizeColumnMatrix[i], startSizeRowMatrix[i]);
 	}
-	for (int i = 0; i < 2; i++)
-		CoutMatrix(StartMatrixs[i], i + 1, startSizeColumnMatrix[i], startSizeRowMatrix[i]);
+	for (int i = 0; i < 2; i++) {
+		std::cout << "\nМатрица " << i+1 << " \n\n";
+		CoutMatrix(StartMatrixs[i], startSizeColumnMatrix[i], startSizeRowMatrix[i]);
+	}
 	//Приведение матриц к требуемому размеру
 
 	while (reducedMatrixSize < startSizeColumnMatrix[0] || reducedMatrixSize < startSizeColumnMatrix[1] 
@@ -181,7 +181,9 @@ int main()
 	for (int i = 0; i < 2; i++)
 	{
 		BringingToTheDesiredSize(StartMatrixs[i], startSizeColumnMatrix[i], startSizeRowMatrix[i]);
-		CoutMatrix(StartMatrixs[i], i + 1, startSizeColumnMatrix[i], startSizeRowMatrix[i]);
+		std::cout << "\nМатрица " << i + 1 << " \n\n";
+
+		CoutMatrix(StartMatrixs[i], startSizeColumnMatrix[i], startSizeRowMatrix[i]);
 	}
 	//Разбиение матриц на подматрицы и их заполнение
 	int*** SplitMatrix1 = new int**[4];
@@ -190,13 +192,13 @@ int main()
 	AddMatrixsToMatrix(SplitMatrix2, 4, reducedMatrixSize / 2, reducedMatrixSize / 2);
 	int MatrixCount = 0;
 
-	for (int column = 0; column < reducedMatrixSize; column += reducedMatrixSize / 2)
 		for (int i = 0; i < reducedMatrixSize; i += reducedMatrixSize / 2)
-		{
-			SplittingOfTheMatrix(SplitMatrix1[MatrixCount], StartMatrixs[0], column, i);
-			SplittingOfTheMatrix(SplitMatrix2[MatrixCount], StartMatrixs[1], column, i);
-			MatrixCount++;
-		}
+			for (int j = 0; j < reducedMatrixSize; j += reducedMatrixSize / 2)
+			{
+				SplittingOfTheMatrix(SplitMatrix1[MatrixCount], StartMatrixs[0], i, j);
+				SplittingOfTheMatrix(SplitMatrix2[MatrixCount], StartMatrixs[1], i, j);
+				MatrixCount++;
+			}
 	//Создание промежуточных матриц
 	int*** MediateMatrix = new int**[7];
 	AddMatrixsToMatrix(MediateMatrix, 7, reducedMatrixSize / 2, reducedMatrixSize / 2);
@@ -213,31 +215,31 @@ int main()
 	AddMatrixsToMatrix(AuxiliaryMatrices, 4, reducedMatrixSize / 2, reducedMatrixSize / 2);
 
 	//Подсчет значений вспомогательных матриц из промежуточных
-	for (int i = 0; i < reducedMatrixSize / 2; i++) {
+	for (int row = 0; row < reducedMatrixSize / 2; row++) {
 		for (int column = 0; column < reducedMatrixSize / 2; column++) {
-			CalculatingAuxiliaryMatrix1(AuxiliaryMatrices[0], MediateMatrix, i, column);
-			CalculatingAuxiliaryMatrix2(AuxiliaryMatrices[1], MediateMatrix, i, column);
-			CalculatingAuxiliaryMatrix3(AuxiliaryMatrices[2], MediateMatrix, i, column);
-			CalculatingAuxiliaryMatrix4(AuxiliaryMatrices[3], MediateMatrix, i, column);
+			CalculatingAuxiliaryMatrix1(AuxiliaryMatrices[0], MediateMatrix, row, column);
+			CalculatingAuxiliaryMatrix2(AuxiliaryMatrices[1], MediateMatrix, row, column);
+			CalculatingAuxiliaryMatrix3(AuxiliaryMatrices[2], MediateMatrix, row, column);
+			CalculatingAuxiliaryMatrix4(AuxiliaryMatrices[3], MediateMatrix, row, column);
 		}
 	}
 	//Создание результирующей матрицы
 	int** ResultMatrixBuf = new int*[reducedMatrixSize];
 	AddRowsToMatrix(ResultMatrixBuf, reducedMatrixSize, reducedMatrixSize);
 	//Занесение информации из вспомогательных матриц в результирующую
-	for (int i = 0; i < reducedMatrixSize / 2; i++) {
+	for (int row = 0; row < reducedMatrixSize / 2; row++) {
 		for (int column = 0; column < reducedMatrixSize / 2; column++) {
-			ResultMatrixBuf[i][column] = AuxiliaryMatrices[0][i][column];
-			ResultMatrixBuf[i][column + reducedMatrixSize / 2] = AuxiliaryMatrices[1][i][column];
-			ResultMatrixBuf[i + reducedMatrixSize / 2][column] = AuxiliaryMatrices[2][i][column];
-			ResultMatrixBuf[i + reducedMatrixSize / 2][column + reducedMatrixSize / 2] = AuxiliaryMatrices[3][i][column];
+			ResultMatrixBuf[row][column] = AuxiliaryMatrices[0][row][column];
+			ResultMatrixBuf[row][column + reducedMatrixSize / 2] = AuxiliaryMatrices[1][row][column];
+			ResultMatrixBuf[row + reducedMatrixSize / 2][column] = AuxiliaryMatrices[2][row][column];
+			ResultMatrixBuf[row + reducedMatrixSize / 2][column + reducedMatrixSize / 2] = AuxiliaryMatrices[3][row][column];
 		}
 	}
 
 	//Выравнивание границ результирующей матрицы
 	int alignmentRows = 100, alignmentColumn = 100, row = 0, column = 0;
-	alignmentMatrix(ResultMatrixBuf, alignmentRows, 1); //по столбцам
-	alignmentMatrix(ResultMatrixBuf, alignmentColumn, 0); //по строкам
+	AlignmentMatrix(ResultMatrixBuf, alignmentRows, 1); //по столбцам
+	AlignmentMatrix(ResultMatrixBuf, alignmentColumn, 0); //по строкам
 
 	int** ResultMatrix = new int*[alignmentRows];		
 	for (int i = 0; i < alignmentRows; i++)
@@ -249,7 +251,7 @@ int main()
 
    //Вывод результирующей матрицы
 	std::cout << "\nРезультирующая матрица\n\n";
-	CoutMatrix(ResultMatrixBuf, 0, alignmentRows, alignmentColumn);	//Очистка динамической памяти
+	CoutMatrix(ResultMatrixBuf, alignmentRows, alignmentColumn);	//Очистка динамической памяти
 	for (int i = 0; i < 2; i++)
 		deleteMatrix(StartMatrixs[i], startSizeColumnMatrix[i]);
 	for (int i = 0; i < 7; i++)
@@ -261,6 +263,5 @@ int main()
 	}
 	deleteMatrix(ResultMatrixBuf, reducedMatrixSize);
 	deleteMatrix(ResultMatrix, alignmentRows);
-
 	delete[] StartMatrixs, MediateMatrix, SplitMatrix1, SplitMatrix2, AuxiliaryMatrices;
 }
